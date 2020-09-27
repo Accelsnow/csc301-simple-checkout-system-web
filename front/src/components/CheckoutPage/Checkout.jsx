@@ -93,16 +93,24 @@ class Checkout extends Component {
 		console.log({timeStamp, net_total, discount, tax_rate, total, customer_id});
 	};
 	render() {
+		const {history} = this.props;
 		return (
-			<div className="container">
-
-				<form className="form" noValidate onSubmit={this.onAddItem}>
+			<div className="container_checkout">
+				<Button
+					type="submit"
+					variant="contained"
+					color="primary"
+					className="login_button"
+					onClick={() => {history.push("/login")}}
+				>
+					Manager Portal
+				</Button>
+				<form className="form_checkout" noValidate onSubmit={this.onAddItem}>
 					<TextField
 						className="search_input"
 						variant="outlined"
 						margin="normal"
 						required
-						fullWidth
 						id="email"
 						label="Enter Item Name or ID"
 						name="name|id"
@@ -111,7 +119,6 @@ class Checkout extends Component {
 					/>
 					<Button
 						type="submit"
-						fullWidth
 						variant="contained"
 						color="primary"
 						className="search_button"
@@ -165,13 +172,12 @@ class Checkout extends Component {
 						</TableBody>
 					</Table>
 				</TableContainer>
-				<form className="form" noValidate onSubmit={this.onCheckout}>
+				<form className="form_checkout" noValidate onSubmit={this.onCheckout}>
 					<TextField
 						className="customer_name"
 						variant="outlined"
 						margin="normal"
 						required
-						fullWidth
 						id="name"
 						label="Enter Customer Name"
 						name="name"
@@ -180,7 +186,6 @@ class Checkout extends Component {
 					/>
 					<Button
 						type="submit"
-						fullWidth
 						variant="contained"
 						color="primary"
 						className="customer_button"

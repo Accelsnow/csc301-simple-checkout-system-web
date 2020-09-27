@@ -34,14 +34,14 @@ class Login extends Component {
 					<Typography component="h1" variant="h5">
 						Sign in
 					</Typography>
-					<form className="form" noValidate onSubmit={this.onSubmit}>
+					<form className="form1" noValidate onSubmit={this.onSubmit}>
 						<TextField
 							variant="outlined"
 							margin="normal"
 							required
 							fullWidth
 							id="email"
-							label="Email Address"
+							label="Username"
 							name="email"
 							autoComplete="email"
 							autoFocus
