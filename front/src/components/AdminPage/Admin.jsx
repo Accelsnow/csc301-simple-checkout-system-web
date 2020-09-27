@@ -18,10 +18,19 @@ const items = [
 	{id: 3, name: "apple", discount: 0.3, price: 10.0, stock: 3}
 ];
 
+const receipes = [
+	{timeStamp: 123, net_total: 100, discount: 0, tax_rate: 1.1, total: 110, customer_id: 1},
+	{timeStamp: 456, net_total: 200, discount: 0.5, tax_rate: 1.2, total: 120, customer_id: 2}
+];
+
+
 class Admin extends Component {
 	state = {
 		items: items,
 		edit: -1,
+		priceErr: false,
+		discountErr: false,
+		stockErr: false
 	};
 	onEditItem = (e,i) => {
 		e.preventDefault();
@@ -44,6 +53,48 @@ class Admin extends Component {
 			this.setState({edit: i});
 		}
 	};
+	onRemoveItem = (e,i) => {
+		e.preventDefault();
+		const itemsCopy = this.state.items;
+		const itemCopy = itemsCopy.find(j => j.id === i);
+		itemsCopy.splice(itemsCopy.indexOf(itemCopy),1);
+		this.setState({items: itemsCopy});
+	};
+	onAddItem = (e) => {
+		e.preventDefault();
+		if (this.state.discountErr || this.state.priceErr || this.state.stockErr){
+			alert("Please fix errors");
+		} else {
+			const itemsCopy = this.state.items;
+			let ct = 4;
+			itemsCopy.push({id: ct, name: this.state.name, price: this.state.price, discount: this.state.discount, stock: this.state.stock});
+			this.setState({items: itemsCopy});
+		}
+	};
+	onChangeName = (e) => {
+		this.setState({name: e.target.value});
+	};
+	onChangePrice = (e) => {
+		if ( Number(e.target.value) && Number(e.target.value) > 0){
+			this.setState({price: Number(e.target.value), priceErr: false});
+		} else {
+			this.setState({priceErr: true});
+		}
+	};
+	onChangeDiscount = (e) => {
+		if ( Number(e.target.value) && Math.sign(Number(e.target.value)) !== -1 && Number(e.target.value) < 1){
+			this.setState({discount: Number(e.target.value), discountErr: false});
+		} else {
+			this.setState({discountErr: true});
+		}
+	};
+	onChangeStock = (e) => {
+		if ( Number(e.target.value) && Number(e.target.value) > 0 && Number.isInteger(Number(e.target.value))){
+			this.setState({stock: Number(e.target.value), stockErr: false});
+		} else {
+			this.setState({stockErr: true});
+		}
+	};
 	render() {
 		const { history } = this.props;
 		return (
@@ -57,7 +108,88 @@ class Admin extends Component {
 				>
 					Sign Out
 				</Button>
-				<TableContainer component={Paper}>
+				<form className="form_admin"  noValidate onSubmit={this.onAddItem}>
+						<TextField
+						className="admin_input"
+						variant="outlined"
+						margin="normal"
+						required
+						id="email"
+						label="Enter Item Name"
+						name="name"
+						autoFocus
+						onChange={this.onChangeName}
+					/>
+					<TextField
+						className="admin_input"
+						variant="outlined"
+						margin="normal"
+						required
+						type="number"
+						InputProps={{
+							inputProps: {
+								min: 0
+							}
+						}}
+						defaultValue={0}
+						id="standard-number"
+						label="Enter Item Price"
+						name="price"
+						autoFocus
+						onChange={this.onChangePrice}
+						error={this.state.priceErr}
+						helperText={this.state.priceErr ? 'Price should > 0' : ''}
+					/>
+					<TextField
+						className="admin_input"
+						variant="outlined"
+						margin="normal"
+						required
+						type="number"
+						InputProps={{
+							inputProps: {
+								max: 1, min: 0
+							}
+						}}
+						defaultValue={0}
+						id="standard-number"
+						label="Enter Item Discount"
+						name="discount"
+						autoFocus
+						onChange={this.onChangeDiscount}
+						error={this.state.discountErr}
+						helperText={this.state.discountErr ? 'Discount should > 0 and < 1' : ''}
+					/>
+					<TextField
+						className="admin_input"
+						variant="outlined"
+						margin="normal"
+						required
+						type="number"
+						id="standard-number"
+						label="Enter Item Stock"
+						name="stock"
+						defaultValue={0}
+						InputProps={{
+							inputProps: {
+								min: 0
+							}
+						}}
+						autoFocus
+						onChange={this.onChangeStock}
+						error={this.state.stockErr}
+						helperText={this.state.stockErr ? 'Stock should int > 0' : ''}
+					/>
+					<Button
+						type="submit"
+						variant="contained"
+						color="primary"
+						className="admin_button"
+					>
+						Add
+					</Button>
+				</form>
+				<TableContainer component={Paper} className="table_admin">
 					<Table style={{minWidth: 650}} aria-label="simple table">
 						<TableHead>
 							<TableRow>
@@ -67,6 +199,7 @@ class Admin extends Component {
 								<TableCell align="center">Discount&nbsp;(%)</TableCell>
 								<TableCell align="center">Stock</TableCell>
 								<TableCell align="center">Edit</TableCell>
+								<TableCell align="center">remove</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -133,6 +266,9 @@ class Admin extends Component {
 												        onClick={(e) => {this.onEditItem(e,item.id)}}
 												        className={"admin-edit-but"}>Edit</Button>
 										}
+									</TableCell>
+									<TableCell align="center">
+										<Button variant="contained" onClick={(e) => {this.onRemoveItem(e, item.id)}}>Remove</Button>
 									</TableCell>
 								</TableRow>
 							))}
