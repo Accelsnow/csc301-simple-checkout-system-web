@@ -21,3 +21,13 @@
 .form .search_button {
 	width: 9%;
 }
+
+.form .customer_name {
+	margin-left: 25%;
+	width: 40%;
+	margin-right: 1%;
+}
+
+.form .customer_button {
+	width: 9%;
+}

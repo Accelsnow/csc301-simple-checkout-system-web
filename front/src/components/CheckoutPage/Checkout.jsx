@@ -10,7 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import { round} from "../utilities";
 import Button from "@material-ui/core/Button";
 import "./Checkout.css"
-
+import { withRouter} from "react-router-dom";
 
 const items = [
 	{id: 1, name: "coke", discount: 0.8, price: 3.0, stock: 10, quantity: 1, total: round((1-0.8)*3.0)},
@@ -53,6 +53,10 @@ class Checkout extends Component {
 		e.preventDefault();
 		this.setState({search: e.target.value});
 	};
+	onChangeName = (e) => {
+		e.preventDefault();
+		this.setState({name: e.target.value});
+	};
 	onAddItem = (e) => {
 		e.preventDefault();
 		const itemToAdd = toAdd.find(i => (i.id === Number(this.state.search) || i.name === this.state.search));
@@ -74,9 +78,24 @@ class Checkout extends Component {
 			this.setState({err: "No such "})
 		}
 	};
+	onCheckout = (e) => {
+		e.preventDefault();
+		const timeStamp = 123;
+		let net_total = 0, i;
+		for (i = 0;i < this.state.items.length; i++) {
+			net_total += Number(this.state.items[i].total);
+		}
+		net_total = round(net_total);
+		const discount = 0.1;
+		const tax_rate = 0.1;
+		const total = round(net_total*(1-discount)*(1+tax_rate));
+		const customer_id = this.state.name;
+		console.log({timeStamp, net_total, discount, tax_rate, total, customer_id});
+	};
 	render() {
 		return (
 			<div className="container">
+
 				<form className="form" noValidate onSubmit={this.onAddItem}>
 					<TextField
 						className="search_input"
@@ -146,9 +165,32 @@ class Checkout extends Component {
 						</TableBody>
 					</Table>
 				</TableContainer>
+				<form className="form" noValidate onSubmit={this.onCheckout}>
+					<TextField
+						className="customer_name"
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="name"
+						label="Enter Customer Name"
+						name="name"
+						autoFocus
+						onChange={this.onChangeName}
+					/>
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className="customer_button"
+					>
+						Pay
+					</Button>
+				</form>
 			</div>
 		);
 	}
 }
 
-export default Checkout;
+export default withRouter(Checkout);
