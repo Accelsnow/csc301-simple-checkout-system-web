@@ -5,6 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { withRouter } from "react-router-dom";
+import { login } from "../../actions/item";
 
 class Login extends Component {
 	state = {
@@ -13,7 +14,7 @@ class Login extends Component {
 	};
 	onChangeEmail = (e) => {
 		e.preventDefault();
-		this.setState({email: e.target.value});
+		this.setState({username: e.target.value});
 	};
 	onChangePass = (e) => {
 		e.preventDefault();
@@ -21,11 +22,8 @@ class Login extends Component {
 	};
 	onSubmit = (e) => {
 		e.preventDefault();
-		if (this.state.email !== "admin" || this.state.pass !== "admin"){
-			alert("wrong email or password");
-		} else {
-			this.props.history.push("/admin");
-		}
+		const data = {username: this.state.username, password: this.state.pass};
+		login(this, data);
 	};
 	render() {
 		return (

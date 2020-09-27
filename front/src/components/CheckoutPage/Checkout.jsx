@@ -9,44 +9,46 @@ import Paper from '@material-ui/core/Paper';
 import TextField from "@material-ui/core/TextField";
 import { round} from "../utilities";
 import Button from "@material-ui/core/Button";
-import "./Checkout.css"
+import "./Checkout.css";
 import { withRouter} from "react-router-dom";
+import { checkOut, addToCart, getAllItems} from "../../actions/item";
 
-const items = [
-	{id: 1, name: "coke", discount: 0.8, price: 3.0, stock: 10, quantity: 1, total: round((1-0.8)*3.0)},
-	{id: 2, name: "juice", discount: 0.5, price: 5.0, stock: 5, quantity: 1, total: round((1-0.5)*5.0)},
-	{id: 3, name: "apple", discount: 0.3, price: 10.0, stock: 3, quantity: 1, total: round((1-0.3)*10.0)}
-];
 
-const toAdd = [
-	{id: 4, name: "banana", discount: 0.9, price: 30.0, stock: 100},
-	{id: 5, name: "suica", discount: 0.99, price: 50.0, stock: 50},
-];
-
-function create_item(item) {
+ export function create_item(item) {
 	return ({id: item.id, name: item.name, discount: item.discount, price: item.price, stock: item.stock, quantity: 1, total: round(item.price*(1-item.discount))});
 }
 
 class Checkout extends Component {
-	state = {
-		items: items
-	};
+	constructor(props) {
+		super(props);
+		this.state = {
+			items: [],
+			cart: [],
+			//newCart: [],
+			netTotal: 0
+		};
+	}
+
+	componentDidMount() {
+		getAllItems(this);
+	}
+
 	onBlurQuantity = (e, item) => {
-		const itemsCopy = this.state.items;
-		const itemCopy = itemsCopy.find(i => i.id === item.id);
+		const cartCopy = this.state.cart;
+		const itemCopy = cartCopy.find(i => i.id === item.id);
 		if (Number(e.target.value) === 0){
-			itemsCopy.splice(itemsCopy.indexOf(itemCopy),1);
-			this.setState({items: itemsCopy});
+			cartCopy.splice(cartCopy.indexOf(itemCopy),1);
+			this.setState({cart: cartCopy});
 		}
 	};
 	onChangeQuantity = (e, item) => {
-		const itemsCopy = this.state.items;
-		const itemCopy = itemsCopy.find(i => i.id === item.id);
+		const cartCopy = this.state.cart;
+		const itemCopy = cartCopy.find(i => i.id === item.id);
 		if (Number(e.target.value) >= 0 && Number(e.target.value) <= itemCopy.stock){
-			itemsCopy[itemsCopy.indexOf(itemCopy)].quantity = Number(e.target.value);
+			cartCopy[cartCopy.indexOf(itemCopy)].quantity = Number(e.target.value);
 			const updatedTotal = itemCopy.price*(1-itemCopy.discount)*Number(e.target.value);
-			itemsCopy[itemsCopy.indexOf(itemCopy)].total = round(updatedTotal);
-			this.setState({items: itemsCopy});
+			cartCopy[cartCopy.indexOf(itemCopy)].total = round(updatedTotal);
+			this.setState({cart: cartCopy});
 		}
 	};
 	onChangeSearch = (e) => {
@@ -59,38 +61,28 @@ class Checkout extends Component {
 	};
 	onAddItem = (e) => {
 		e.preventDefault();
-		const itemToAdd = toAdd.find(i => (i.id === Number(this.state.search) || i.name === this.state.search));
-		if (itemToAdd){
-			const itemsCopy = this.state.items;
-			const itemCopy = itemsCopy.find(i => i.id === itemToAdd.id);
-			if (!itemCopy){
-				itemsCopy.push(create_item(itemToAdd));
-				this.setState({items: itemsCopy});
-			} else {
-				if (itemCopy.quantity < itemCopy.stock){
-					itemsCopy[itemsCopy.indexOf(itemCopy)].quantity++;
-					const updatedTotal = itemCopy.price*(1-itemCopy.discount)*(itemCopy.quantity+1);
-					itemsCopy[itemsCopy.indexOf(itemCopy)].total = round(updatedTotal);
-					this.setState({items: itemsCopy});
-				}
-			}
-		} else {
-			this.setState({err: "No such "})
-		}
+		getAllItems(this);
+		this.forceUpdate();
+		addToCart(this, this.state.search);
+		this.forceUpdate();
 	};
 	onCheckout = (e) => {
 		e.preventDefault();
-		const timeStamp = 123;
-		let net_total = 0, i;
-		for (i = 0;i < this.state.items.length; i++) {
-			net_total += Number(this.state.items[i].total);
+		// let i;
+		// for (i = 0; i < this.state.cart.length; i++){
+		// 	updateCartItem(this, this.state.cart[i].id, i);
+		// 	this.forceUpdate();
+		// }
+		// this.setState({cart: this.state.newCart});
+		let i;
+		for (i=0; i < this.state.cart.length; i++){
+			let data = {id: this.state.cart[i].id, amount: this.state.cart[i].quantity};
+			checkOut(this,data);
+			this.forceUpdate();
 		}
-		net_total = round(net_total);
-		const discount = 0.1;
-		const tax_rate = 0.1;
-		const total = round(net_total*(1-discount)*(1+tax_rate));
-		const customer_id = this.state.name;
-		console.log({timeStamp, net_total, discount, tax_rate, total, customer_id});
+		console.log(88, this.state.netTotal);
+
+
 	};
 	render() {
 		const {history} = this.props;
@@ -140,7 +132,7 @@ class Checkout extends Component {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{this.state.items.map(item => (
+							{this.state.cart.map(item => (
 								<TableRow key={item.id}>
 									<TableCell  align="center">
 										{item.name}

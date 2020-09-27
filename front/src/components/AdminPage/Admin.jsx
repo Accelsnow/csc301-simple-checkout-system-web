@@ -11,40 +11,34 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import "./Admin.css";
-
-const items = [
-	{id: 1, name: "coke", discount: 0.8, price: 3.0, stock: 10,},
-	{id: 2, name: "juice", discount: 0.5, price: 5.0, stock: 5},
-	{id: 3, name: "apple", discount: 0.3, price: 10.0, stock: 3}
-];
-
-const receipes = [
-	{timeStamp: 123, net_total: 100, discount: 0, tax_rate: 1.1, total: 110, customer_id: 1},
-	{timeStamp: 456, net_total: 200, discount: 0.5, tax_rate: 1.2, total: 120, customer_id: 2}
-];
-
+import {getAllItems, addItem, removeItem, editItem, logout} from "../../actions/item";
 
 class Admin extends Component {
-	state = {
-		items: items,
-		edit: -1,
-		priceErr: false,
-		discountErr: false,
-		stockErr: false
-	};
+	constructor(props) {
+		super(props);
+		this.state = {
+			items: [],
+			edit: -1,
+			priceErr: false,
+			discountErr: false,
+			stockErr: false,
+		};
+	}
+
+	componentDidMount() {
+		getAllItems(this);
+	}
+
 	onEditItem = (e,i) => {
 		e.preventDefault();
 		if (i === this.state.edit) {
 			const newPrice = Number(document.getElementById("edit-price".concat(i.toString())).value);
 			const newDiscount = Number(document.getElementById("edit-discount".concat(i.toString())).value);
 			const newStock = Number(document.getElementById("edit-stock".concat(i.toString())).value);
-			const itemsCopy = this.state.items;
-			const itemCopy = itemsCopy.find(j => j.id === i);
 			if (newPrice > 0 && newStock >= 0 && newDiscount > 0 && newDiscount < 1){
-				itemsCopy[itemsCopy.indexOf(itemCopy)].price = newPrice;
-				itemsCopy[itemsCopy.indexOf(itemCopy)].discount = newDiscount;
-				itemsCopy[itemsCopy.indexOf(itemCopy)].stock = newStock;
-				this.setState({items: itemsCopy});
+				const data = {price: newPrice, discount: newDiscount, stock: newStock};
+				editItem(this, i, data);
+				this.forceUpdate();
 				this.setState({edit: -1});
 			} else {
 				alert("Please set price > 0 && 0 < discount < 1 && stock >=0");
@@ -55,20 +49,17 @@ class Admin extends Component {
 	};
 	onRemoveItem = (e,i) => {
 		e.preventDefault();
-		const itemsCopy = this.state.items;
-		const itemCopy = itemsCopy.find(j => j.id === i);
-		itemsCopy.splice(itemsCopy.indexOf(itemCopy),1);
-		this.setState({items: itemsCopy});
+		removeItem(this, i);
+		this.forceUpdate();
 	};
 	onAddItem = (e) => {
 		e.preventDefault();
 		if (this.state.discountErr || this.state.priceErr || this.state.stockErr){
 			alert("Please fix errors");
 		} else {
-			const itemsCopy = this.state.items;
-			let ct = 4;
-			itemsCopy.push({id: ct, name: this.state.name, price: this.state.price, discount: this.state.discount, stock: this.state.stock});
-			this.setState({items: itemsCopy});
+			const data = {name: this.state.name, price: this.state.price, discount: this.state.discount, stock: this.state.stock};
+			addItem(this, data);
+			this.forceUpdate();
 		}
 	};
 	onChangeName = (e) => {
@@ -104,7 +95,7 @@ class Admin extends Component {
 					variant="contained"
 					color="primary"
 					className="signOut_button"
-					onClick={() => {history.push("/")}}
+					onClick={() => {logout(this)}}
 				>
 					Sign Out
 				</Button>
