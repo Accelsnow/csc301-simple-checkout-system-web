@@ -156,6 +156,9 @@ class Checkout extends Component {
 											required={true}
 											InputLabelProps={{
 												shrink: true,
+												inputProps: {
+													max: item.stock, min: 0
+												}
 											}}
 											value={item.quantity}
 											inputProps={{
