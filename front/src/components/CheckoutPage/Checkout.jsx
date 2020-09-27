@@ -8,16 +8,23 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TextField from "@material-ui/core/TextField";
 import { round} from "../utilities";
+import Button from "@material-ui/core/Button";
+import "./Checkout.css"
 
 
 const items = [
-	{id: 1, name: "coke", discount: 0.8, price: 3.0, stock: 10, quantity: 1, total: round(0.8*3.0)},
-	{id: 2, name: "juice", discount: 0.5, price: 5.0, stock: 5, quantity: 1, total: round(0.5*5.0)},
-	{id: 3, name: "apple", discount: 0.3, price: 10.0, stock: 3, quantity: 1, total: round(0.3*10.0)}
+	{id: 1, name: "coke", discount: 0.8, price: 3.0, stock: 10, quantity: 1, total: round((1-0.8)*3.0)},
+	{id: 2, name: "juice", discount: 0.5, price: 5.0, stock: 5, quantity: 1, total: round((1-0.5)*5.0)},
+	{id: 3, name: "apple", discount: 0.3, price: 10.0, stock: 3, quantity: 1, total: round((1-0.3)*10.0)}
 ];
 
-function add_item(id, name, discount, price, stock) {
-	items.push({id: id, name: name, discount: discount, price: price, stock: stock, quantity: 1, total: round(price*(1-discount))});
+const toAdd = [
+	{id: 4, name: "banana", discount: 0.9, price: 30.0, stock: 100},
+	{id: 5, name: "suica", discount: 0.99, price: 50.0, stock: 50},
+];
+
+function create_item(item) {
+	return ({id: item.id, name: item.name, discount: item.discount, price: item.price, stock: item.stock, quantity: 1, total: round(item.price*(1-item.discount))});
 }
 
 class Checkout extends Component {
@@ -42,9 +49,57 @@ class Checkout extends Component {
 			this.setState({items: itemsCopy});
 		}
 	};
+	onChangeSearch = (e) => {
+		e.preventDefault();
+		this.setState({search: e.target.value});
+	};
+	onAddItem = (e) => {
+		e.preventDefault();
+		const itemToAdd = toAdd.find(i => (i.id === Number(this.state.search) || i.name === this.state.search));
+		if (itemToAdd){
+			const itemsCopy = this.state.items;
+			const itemCopy = itemsCopy.find(i => i.id === itemToAdd.id);
+			if (!itemCopy){
+				itemsCopy.push(create_item(itemToAdd));
+				this.setState({items: itemsCopy});
+			} else {
+				if (itemCopy.quantity < itemCopy.stock){
+					itemsCopy[itemsCopy.indexOf(itemCopy)].quantity++;
+					const updatedTotal = itemCopy.price*(1-itemCopy.discount)*(itemCopy.quantity+1);
+					itemsCopy[itemsCopy.indexOf(itemCopy)].total = round(updatedTotal);
+					this.setState({items: itemsCopy});
+				}
+			}
+		} else {
+			this.setState({err: "No such "})
+		}
+	};
 	render() {
 		return (
-			<div>
+			<div className="container">
+				<form className="form" noValidate onSubmit={this.onAddItem}>
+					<TextField
+						className="search_input"
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="email"
+						label="Enter Item Name or ID"
+						name="name|id"
+						autoFocus
+						onChange={this.onChangeSearch}
+					/>
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className="search_button"
+					>
+						Add
+					</Button>
+				</form>
 				<TableContainer component={Paper}>
 					<Table style={{minWidth: 650}} aria-label="simple table">
 						<TableHead>
