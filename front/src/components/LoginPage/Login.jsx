@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import { withRouter } from "react-router-dom";
 
 class Login extends Component {
 	state = {
@@ -22,10 +23,8 @@ class Login extends Component {
 		e.preventDefault();
 		if (this.state.email !== "admin" || this.state.pass !== "admin"){
 			alert("wrong email or password");
-			console.log(this.state)
 		} else {
-			alert("log in");
-			//this.props.history.push("/admin");
+			this.props.history.push("/admin");
 		}
 	};
 	render() {
@@ -76,4 +75,4 @@ class Login extends Component {
 	}
 }
 
-export default Login;
+export default withRouter(Login);

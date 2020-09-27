@@ -1,9 +1,97 @@
 import React, { Component } from "react";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import TextField from "@material-ui/core/TextField";
+import { round} from "../utilities";
+
+
+const items = [
+	{id: 1, name: "coke", discount: 0.8, price: 3.0, stock: 10, quantity: 1, total: round(0.8*3.0)},
+	{id: 2, name: "juice", discount: 0.5, price: 5.0, stock: 5, quantity: 1, total: round(0.5*5.0)},
+	{id: 3, name: "apple", discount: 0.3, price: 10.0, stock: 3, quantity: 1, total: round(0.3*10.0)}
+];
+
+function add_item(id, name, discount, price, stock) {
+	items.push({id: id, name: name, discount: discount, price: price, stock: stock, quantity: 1, total: round(price*(1-discount))});
+}
 
 class Checkout extends Component {
+	state = {
+		items: items
+	};
+	onBlurQuantity = (e, item) => {
+		const itemsCopy = this.state.items;
+		const itemCopy = itemsCopy.find(i => i.id === item.id);
+		if (Number(e.target.value) === 0){
+			itemsCopy.splice(itemsCopy.indexOf(itemCopy),1);
+			this.setState({items: itemsCopy});
+		}
+	};
+	onChangeQuantity = (e, item) => {
+		const itemsCopy = this.state.items;
+		const itemCopy = itemsCopy.find(i => i.id === item.id);
+		if (Number(e.target.value) >= 0 && Number(e.target.value) <= itemCopy.stock){
+			itemsCopy[itemsCopy.indexOf(itemCopy)].quantity = Number(e.target.value);
+			const updatedTotal = itemCopy.price*(1-itemCopy.discount)*Number(e.target.value);
+			itemsCopy[itemsCopy.indexOf(itemCopy)].total = round(updatedTotal);
+			this.setState({items: itemsCopy});
+		}
+	};
 	render() {
 		return (
-			<div>Hello</div>
+			<div>
+				<TableContainer component={Paper}>
+					<Table style={{minWidth: 650}} aria-label="simple table">
+						<TableHead>
+							<TableRow>
+								<TableCell align="center">Name</TableCell>
+								<TableCell align="center">Price&nbsp;($)</TableCell>
+								<TableCell align="center">Discount&nbsp;(%)</TableCell>
+								<TableCell align="center">Price(discounted)&nbsp;($)</TableCell>
+								<TableCell align="center">Quantity</TableCell>
+								<TableCell align="center">Stock</TableCell>
+								<TableCell align="center">Item Total&nbsp;($)</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{this.state.items.map(item => (
+								<TableRow key={item.id}>
+									<TableCell  align="center">
+										{item.name}
+									</TableCell>
+									<TableCell align="center">{round(item.price)}</TableCell>
+									<TableCell align="center">{"-"+item.discount*100+"%"}</TableCell>
+									<TableCell align="center">{round(item.price*(1-item.discount))}</TableCell>
+									<TableCell align="center">
+										<TextField
+											style={{width: "100px"}}
+											id="standard-number"
+											type="number"
+											required={true}
+											InputLabelProps={{
+												shrink: true,
+											}}
+											value={item.quantity}
+											inputProps={{
+												style: { textAlign: "center"}
+											}}
+											onChange={(e) => {this.onChangeQuantity(e, item)}}
+											onBlur={(e) => {this.onBlurQuantity(e, item)}}
+										/>
+									</TableCell>
+									<TableCell align="center">{item.stock}</TableCell>
+									<TableCell align="center">{item.total}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			</div>
 		);
 	}
 }
