@@ -68,21 +68,11 @@ class Checkout extends Component {
 	};
 	onCheckout = (e) => {
 		e.preventDefault();
-		// let i;
-		// for (i = 0; i < this.state.cart.length; i++){
-		// 	updateCartItem(this, this.state.cart[i].id, i);
-		// 	this.forceUpdate();
-		// }
-		// this.setState({cart: this.state.newCart});
 		let i;
 		for (i=0; i < this.state.cart.length; i++){
 			let data = {id: this.state.cart[i].id, amount: this.state.cart[i].quantity};
 			checkOut(this,data);
-			this.forceUpdate();
 		}
-		console.log(88, this.state.netTotal);
-
-
 	};
 	render() {
 		const {history} = this.props;
@@ -185,7 +175,7 @@ class Checkout extends Component {
 						color="primary"
 						className="customer_button"
 					>
-						Pay
+						View Recipt
 					</Button>
 				</form>
 			</div>

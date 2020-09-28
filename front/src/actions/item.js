@@ -91,7 +91,6 @@ export const checkOut = (page, data) => {
 			const validItem = res.data.item;
 			let netToTal = page.state.netTotal;
 			netToTal += validItem.price * (1-validItem.discount) * data.amount;
-			console.log(99, netToTal);
 			page.setState({netTotal: netToTal});
 		}
 	}).catch(err => {
@@ -135,7 +134,7 @@ export const login = (page, data) => {
 		}
 	}).catch(err => {
 		console.log(err);
-	})
+	});
 };
 
 export const logout = (page) => {
@@ -151,5 +150,29 @@ export const logout = (page) => {
 export const checkSession = (page) => {
 	axios.get(`${domain}/session`).then(res => {
 		console.log(44, res.data);
+	});
+};
+
+export const editGlobal = (page, data) => {
+	axios.patch( `${domain}/checkout/${1}`, data).then(res => {
+		if (res.data.checkout) {
+			getGlobal(page);
+		} else {
+			alert("EDITION FAILED");
+		}
+	}).catch(err => {
+		alert("Invalid Global Edition");
+	})
+};
+
+export const getGlobal = (page) => {
+	axios.get( `${domain}/checkout/${1}`).then(res => {
+		if (res.data.checkout) {
+			page.setState({checkout: res.data.checkout});
+		} else {
+			alert("FETCH FAILED");
+		}
+	}).catch(err => {
+		alert("Invalid Global Fetch");
 	})
 };
