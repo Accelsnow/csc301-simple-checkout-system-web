@@ -11,7 +11,7 @@ import { round} from "../utilities";
 import Button from "@material-ui/core/Button";
 import "./Checkout.css";
 import { withRouter} from "react-router-dom";
-import { checkOut, addToCart, getAllItems} from "../../actions/item";
+import { checkOut, addToCart, getAllItems, getGlobal} from "../../actions/item";
 
 
  export function create_item(item) {
@@ -24,13 +24,14 @@ class Checkout extends Component {
 		this.state = {
 			items: [],
 			cart: [],
-			//newCart: [],
+			checkout: null,
 			netTotal: 0
 		};
 	}
 
 	componentDidMount() {
 		getAllItems(this);
+		getGlobal(this);
 	}
 
 	onBlurQuantity = (e, item) => {
@@ -62,9 +63,7 @@ class Checkout extends Component {
 	onAddItem = (e) => {
 		e.preventDefault();
 		getAllItems(this);
-		this.forceUpdate();
 		addToCart(this, this.state.search);
-		this.forceUpdate();
 	};
 	onCheckout = (e) => {
 		e.preventDefault();
@@ -73,6 +72,7 @@ class Checkout extends Component {
 			let data = {id: this.state.cart[i].id, amount: this.state.cart[i].quantity};
 			checkOut(this,data);
 		}
+		getGlobal(this);
 	};
 	render() {
 		const {history} = this.props;
@@ -175,7 +175,7 @@ class Checkout extends Component {
 						color="primary"
 						className="customer_button"
 					>
-						View Recipt
+						View Receipt
 					</Button>
 				</form>
 			</div>

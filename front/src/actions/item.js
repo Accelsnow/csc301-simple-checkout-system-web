@@ -4,7 +4,7 @@ import {create_item} from "../components/CheckoutPage/Checkout";
 const axios = require('axios');
 axios.defaults.withCredentials = true;
 
-const domain = "http://localhost:8000";
+const domain = "http://checkout-env.eba-icztdryu.ca-central-1.elasticbeanstalk.com";
 
 export const getAllItems = (page) => {
 	axios.get(`${domain}/items`).then(res => {
@@ -123,7 +123,7 @@ export const removeItem = (page, itemId) => {
 };
 
 export const login = (page, data) => {
-	axios.post(`${domain}/login`, data).then(res => {
+	axios.post(`${domain}/login`, data, {withCredentials: true}).then(res => {
 		console.log(55, res.data);
 		if (res.data.manager){
 			page.setState({currUser: res.data.manager});
@@ -148,7 +148,7 @@ export const logout = (page) => {
 };
 
 export const checkSession = (page) => {
-	axios.get(`${domain}/session`).then(res => {
+	axios.get(`${domain}/session`, {withCredentials: true}).then(res => {
 		console.log(44, res.data);
 	});
 };
