@@ -35,7 +35,7 @@ export const addToCart = (page, itemId) => {
 		if (res.data.item){
 			page.setState({targetItem: res.data.item});
 			const itemToAdd = page.state.targetItem;
-			if (itemToAdd){
+			if (itemToAdd && itemToAdd.stock > 0){
 				const cartCopy = page.state.cart;
 				const itemCopy = cartCopy.find(i => i.id === itemToAdd.id);
 				if (!itemCopy){
@@ -49,6 +49,9 @@ export const addToCart = (page, itemId) => {
 						page.setState({cart: cartCopy});
 					}
 				}
+				let total = page.state.total;
+				total += itemToAdd.price * (1-itemToAdd.discount);
+				page.setState({total: total});
 			} else {
 				alert("NO SUCH ELEMENT1");
 			}
@@ -60,41 +63,46 @@ export const addToCart = (page, itemId) => {
 	})
 };
 
-// export const updateCartItem = (page, itemId, i) => {
-// 	axios.get(`${domain}/item/${itemId}`).then(res => {
-// 		if (res.data.item){
-// 			page.setState({targetItem: res.data.item});
-// 			const itemRemote = page.state.targetItem;
-// 			if (itemRemote && itemRemote.quantity > 0){
-// 				const cartCopy = this.state.cart;
-// 				cartCopy[i].price = itemRemote.price;
-// 				cartCopy[i].discount = itemRemote.discount;
-// 				cartCopy[i].stock = itemRemote.stock;
-// 				if (cartCopy[i].quantity > itemRemote.quantity){
-// 					cartCopy[i].quantity = itemRemote.quantity;
-// 					alert("Some items decreased in stock before your check out");
-// 				}
-// 				cartCopy[i].total = round(cartCopy[i].price*(1-cartCopy[i].discount)*cartCopy[i].quantity);
-// 				page.state.newCart.push(cartCopy[i]);
-// 			}
-// 		} else {
-// 			alert("NO SUCH ITEM");
-// 		}
-// 	}).catch(err => {
-// 		alert(err);
-// 	})
-// };
-
-export const checkOut = (page, data) => {
+export const checkOut = (page, data, i) => {
 	axios.post(`${domain}/item/purchase`, data).then(res => {
 		if (res.data.item){
 			const validItem = res.data.item;
-			let netToTal = page.state.netTotal;
-			netToTal += validItem.price * (1-validItem.discount) * data.amount;
-			page.setState({netTotal: netToTal});
+			let toTal = page.state.netTotal;
+			toTal += validItem.price * (1-validItem.discount) * data.amount;
+			page.setState({netTotal: toTal});
 		}
 	}).catch(err => {
-		alert(err);
+		alert("Some items decreased in stock before your check out");
+		axios.get(`${domain}/item/${data.id}`).then(res => {
+			if (res.data.item){
+				const itemRemote = res.data.item;
+				let total = page.state.total;
+				if (itemRemote){
+					const cartCopy = page.state.cart;
+					if (itemRemote.stock === 0) {
+						total -= cartCopy[i].total;
+						page.setState({total: total});
+						cartCopy.splice(i,1);
+					} else {
+						cartCopy[i].price = itemRemote.price;
+						cartCopy[i].discount = itemRemote.discount;
+						cartCopy[i].stock = itemRemote.stock;
+						if (cartCopy[i].quantity > itemRemote.stock){
+							cartCopy[i].quantity = itemRemote.stock;
+						}
+						total -= cartCopy[i].total;
+						cartCopy[i].total = round(cartCopy[i].price*(1-cartCopy[i].discount)*cartCopy[i].quantity);
+						total += cartCopy[i].total;
+						page.setState({total: total});
+					}
+					page.setState({cart: cartCopy});
+				}
+			} else {
+				alert("NO SUCH ITEM");
+			}
+		}).catch(err => {
+			alert(err);
+		})
 	})
 };
 

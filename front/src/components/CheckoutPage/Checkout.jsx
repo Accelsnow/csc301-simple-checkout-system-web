@@ -25,7 +25,8 @@ class Checkout extends Component {
 			items: [],
 			cart: [],
 			checkout: null,
-			netTotal: 0
+			netTotal: 0,
+			total: 0,
 		};
 	}
 
@@ -45,20 +46,22 @@ class Checkout extends Component {
 	onChangeQuantity = (e, item) => {
 		const cartCopy = this.state.cart;
 		const itemCopy = cartCopy.find(i => i.id === item.id);
-		if (Number(e.target.value) >= 0 && Number(e.target.value) <= itemCopy.stock){
+		if (Number(e.target.value) > 0 && Number(e.target.value) <= itemCopy.stock){
+			let total = this.state.total;
+			total -= itemCopy.total;
 			cartCopy[cartCopy.indexOf(itemCopy)].quantity = Number(e.target.value);
 			const updatedTotal = itemCopy.price*(1-itemCopy.discount)*Number(e.target.value);
 			cartCopy[cartCopy.indexOf(itemCopy)].total = round(updatedTotal);
-			this.setState({cart: cartCopy});
+			total += Number(round(updatedTotal));
+			this.setState({cart: cartCopy, total: total});
+		} else{
+			cartCopy.splice(cartCopy.indexOf(itemCopy),1);
+			this.setState({cart: cartCopy, total: 0});
 		}
 	};
 	onChangeSearch = (e) => {
 		e.preventDefault();
 		this.setState({search: e.target.value});
-	};
-	onChangeName = (e) => {
-		e.preventDefault();
-		this.setState({name: e.target.value});
 	};
 	onAddItem = (e) => {
 		e.preventDefault();
@@ -70,7 +73,7 @@ class Checkout extends Component {
 		let i;
 		for (i=0; i < this.state.cart.length; i++){
 			let data = {id: this.state.cart[i].id, amount: this.state.cart[i].quantity};
-			checkOut(this,data);
+			checkOut(this,data, i);
 		}
 		getGlobal(this);
 	};
@@ -168,7 +171,8 @@ class Checkout extends Component {
 							label="Total"
 							name="name"
 							autoFocus
-							onChange={this.state.netTotal*(1+this.state.checkout.tax_rate)*(1-this.state.checkout.discount)}
+							disabled={true}
+							value={round(this.state.total)}
 						/>
 						<Button
 							type="submit"
