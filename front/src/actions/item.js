@@ -124,7 +124,6 @@ export const removeItem = (page, itemId) => {
 
 export const login = (page, data) => {
 	axios.post(`${domain}/login`, data, {withCredentials: true}).then(res => {
-		console.log(55, res.data);
 		if (res.data.manager){
 			page.setState({currUser: res.data.manager});
 			page.props.history.push("/admin");
@@ -139,7 +138,6 @@ export const login = (page, data) => {
 
 export const logout = (page) => {
 	axios.get(`${domain}/logout`).then(res => {
-		console.log(66, res.data);
 		if (res.data.success){
 			page.setState({currUser: undefined});
 			page.props.history.push("/");
@@ -149,7 +147,7 @@ export const logout = (page) => {
 
 export const checkSession = (page) => {
 	axios.get(`${domain}/session`, {withCredentials: true}).then(res => {
-		console.log(44, res.data);
+		console.log("session ok", res.data);
 	});
 };
 

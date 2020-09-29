@@ -76,110 +76,115 @@ class Checkout extends Component {
 	};
 	render() {
 		const {history} = this.props;
-		return (
-			<div className="container_checkout">
-				<Button
-					type="submit"
-					variant="contained"
-					color="primary"
-					className="login_button"
-					onClick={() => {history.push("/login")}}
-				>
-					Manager Portal
-				</Button>
-				<form className="form_checkout" noValidate onSubmit={this.onAddItem}>
-					<TextField
-						className="search_input"
-						variant="outlined"
-						margin="normal"
-						required
-						id="email"
-						label="Enter Item Name or ID"
-						name="name|id"
-						autoFocus
-						onChange={this.onChangeSearch}
-					/>
+		if (this.state.checkout) {
+			return (
+				<div className="container_checkout">
 					<Button
 						type="submit"
 						variant="contained"
 						color="primary"
-						className="search_button"
+						className="login_button"
+						onClick={() => {history.push("/login")}}
 					>
-						Add
+						Manager Portal
 					</Button>
-				</form>
-				<TableContainer component={Paper}>
-					<Table style={{minWidth: 650}} aria-label="simple table">
-						<TableHead>
-							<TableRow>
-								<TableCell align="center">Name</TableCell>
-								<TableCell align="center">Price&nbsp;($)</TableCell>
-								<TableCell align="center">Discount&nbsp;(%)</TableCell>
-								<TableCell align="center">Price(discounted)&nbsp;($)</TableCell>
-								<TableCell align="center">Quantity</TableCell>
-								<TableCell align="center">Stock</TableCell>
-								<TableCell align="center">Item Total&nbsp;($)</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{this.state.cart.map(item => (
-								<TableRow key={item.id}>
-									<TableCell  align="center">
-										{item.name}
-									</TableCell>
-									<TableCell align="center">{round(item.price)}</TableCell>
-									<TableCell align="center">{"-"+item.discount*100+"%"}</TableCell>
-									<TableCell align="center">{round(item.price*(1-item.discount))}</TableCell>
-									<TableCell align="center">
-										<TextField
-											style={{width: "100px"}}
-											id="standard-number"
-											type="number"
-											required={true}
-											InputLabelProps={{
-												shrink: true,
-												inputProps: {
-													max: item.stock, min: 0
-												}
-											}}
-											value={item.quantity}
-											inputProps={{
-												style: { textAlign: "center"}
-											}}
-											onChange={(e) => {this.onChangeQuantity(e, item)}}
-											onBlur={(e) => {this.onBlurQuantity(e, item)}}
-										/>
-									</TableCell>
-									<TableCell align="center">{item.stock}</TableCell>
-									<TableCell align="center">{item.total}</TableCell>
+					<form className="form_checkout" noValidate onSubmit={this.onAddItem}>
+						<TextField
+							className="search_input"
+							variant="outlined"
+							margin="normal"
+							required
+							id="email"
+							label="Enter Item Name or ID"
+							name="name|id"
+							autoFocus
+							onChange={this.onChangeSearch}
+						/>
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							className="search_button"
+						>
+							Add
+						</Button>
+					</form>
+					<TableContainer component={Paper}>
+						<Table style={{minWidth: 650}} aria-label="simple table">
+							<TableHead>
+								<TableRow>
+									<TableCell align="center">Name</TableCell>
+									<TableCell align="center">Price&nbsp;($)</TableCell>
+									<TableCell align="center">Discount&nbsp;(%)</TableCell>
+									<TableCell align="center">Price(discounted)&nbsp;($)</TableCell>
+									<TableCell align="center">Quantity</TableCell>
+									<TableCell align="center">Stock</TableCell>
+									<TableCell align="center">Item Total&nbsp;($)</TableCell>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</TableContainer>
-				<form className="form_checkout" noValidate onSubmit={this.onCheckout}>
-					<TextField
-						className="customer_name"
-						variant="outlined"
-						margin="normal"
-						required
-						id="name"
-						label="Enter Customer Name"
-						name="name"
-						autoFocus
-						onChange={this.onChangeName}
-					/>
-					<Button
-						type="submit"
-						variant="contained"
-						color="primary"
-						className="customer_button"
-					>
-						View Receipt
-					</Button>
-				</form>
-			</div>
-		);
+							</TableHead>
+							<TableBody>
+								{this.state.cart.map(item => (
+									<TableRow key={item.id}>
+										<TableCell  align="center">
+											{item.name}
+										</TableCell>
+										<TableCell align="center">{round(item.price)}</TableCell>
+										<TableCell align="center">{"-"+item.discount*100+"%"}</TableCell>
+										<TableCell align="center">{round(item.price*(1-item.discount))}</TableCell>
+										<TableCell align="center">
+											<TextField
+												style={{width: "100px"}}
+												id="standard-number"
+												type="number"
+												required={true}
+												InputLabelProps={{
+													shrink: true,
+													inputProps: {
+														max: item.stock, min: 0
+													}
+												}}
+												value={item.quantity}
+												inputProps={{
+													style: { textAlign: "center"}
+												}}
+												onChange={(e) => {this.onChangeQuantity(e, item)}}
+												onBlur={(e) => {this.onBlurQuantity(e, item)}}
+											/>
+										</TableCell>
+										<TableCell align="center">{item.stock}</TableCell>
+										<TableCell align="center">{item.total}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+					<form className="form_checkout" noValidate onSubmit={this.onCheckout}>
+						<TextField
+							className="customer_name"
+							variant="outlined"
+							margin="normal"
+							required
+							id="name"
+							label="Total"
+							name="name"
+							autoFocus
+							onChange={this.state.netTotal*(1+this.state.checkout.tax_rate)*(1-this.state.checkout.discount)}
+						/>
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							className="customer_button"
+						>
+							Checkout
+						</Button>
+					</form>
+				</div>
+			);
+		} else {
+			return (<div></div>);
+		}
+
 	}
 }
 
