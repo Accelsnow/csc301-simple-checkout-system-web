@@ -66,9 +66,10 @@ export const addToCart = (page, itemId) => {
 export const checkOut = (page, data, i) => {
 	axios.post(`${domain}/item/purchase`, data).then(res => {
 		if (res.data.item){
+			getGlobal(page);
 			const validItem = res.data.item;
 			let toTal = page.state.netTotal;
-			toTal += validItem.price * (1-validItem.discount) * data.amount;
+			toTal += validItem.price * (1-validItem.discount) * data.amount * (1+page.state.checkout.tax_rate) * (1-page.state.checkout.discount);
 			page.setState({netTotal: toTal});
 		}
 	}).catch(err => {
@@ -91,7 +92,7 @@ export const checkOut = (page, data, i) => {
 							cartCopy[i].quantity = itemRemote.stock;
 						}
 						total -= cartCopy[i].total;
-						cartCopy[i].total = round(cartCopy[i].price*(1-cartCopy[i].discount)*cartCopy[i].quantity);
+						cartCopy[i].total = Number(round(cartCopy[i].price*(1-cartCopy[i].discount)*cartCopy[i].quantity));
 						total += cartCopy[i].total;
 						page.setState({total: total});
 					}

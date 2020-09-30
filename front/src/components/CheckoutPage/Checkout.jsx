@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from "@material-ui/core/TextField";
 import { round} from "../utilities";
 import Button from "@material-ui/core/Button";
+import Modal from '@material-ui/core/Modal';
 import "./Checkout.css";
 import { withRouter} from "react-router-dom";
 import { checkOut, addToCart, getAllItems, getGlobal} from "../../actions/item";
@@ -27,6 +28,7 @@ class Checkout extends Component {
 			checkout: null,
 			netTotal: 0,
 			total: 0,
+			modalOpen: false
 		};
 	}
 
@@ -70,12 +72,25 @@ class Checkout extends Component {
 	};
 	onCheckout = (e) => {
 		e.preventDefault();
+		getGlobal(this);
+		this.setState({modalOpen: true});
+	};
+	onConfirm = (e) => {
+		e.preventDefault();
 		let i;
 		for (i=0; i < this.state.cart.length; i++){
 			let data = {id: this.state.cart[i].id, amount: this.state.cart[i].quantity};
 			checkOut(this,data, i);
 		}
-		getGlobal(this);
+		this.setState({modalOpen: false,items: [],
+			cart: [],
+			netTotal: 0,
+			total: 0,});
+	};
+
+	onModalClose = (e) => {
+		e.preventDefault();
+		this.setState({modalOpen: false});
 	};
 	render() {
 		const {history} = this.props;
@@ -182,6 +197,19 @@ class Checkout extends Component {
 						>
 							Checkout
 						</Button>
+						<Modal
+							open={this.state.modalOpen}
+							onClose={this.onModalClose}
+						>
+							<form className="receipt">
+								<h2>Receipt</h2>
+								<h4>Net Total: {round(this.state.total)}</h4>
+								<h4>Tax Rate: {round(this.state.checkout.tax_rate)}</h4>
+								<h4>Discount: {round(this.state.checkout.discount)}</h4>
+								<h4>Total: {round(this.state.total * (1+this.state.checkout.tax_rate)*(1-this.state.checkout.discount))}</h4>
+								<Button onClick={this.onConfirm}> Confirm </Button>
+							</form>
+						</Modal>
 					</form>
 				</div>
 			);
