@@ -11,22 +11,23 @@ export const getAllItems = (page) => {
 		if (res.data.items) {
 			page.setState({items: res.data.items})
 		} else {
-			console.log("NO ITEMS DATA");
+			alert("NO ITEMS DATA");
 		}
 	}).catch(err => {
-		console.log(err);
+		alert(err.response.data.error);
 	})
 };
 
 export const editItem = (page, itemID, data) => {
 	axios.patch( `${domain}/item/${itemID}`, data).then(res => {
 		if (res.data.item) {
+			page.setState({edit: -1});
 			getAllItems(page);
 		} else {
 			alert("EDITION FAILED");
 		}
 	}).catch(err => {
-		alert("Invalid Item Edition");
+		alert(err.response.data.error);
 	})
 };
 
@@ -53,13 +54,13 @@ export const addToCart = (page, itemId) => {
 				total += itemToAdd.price * (1-itemToAdd.discount);
 				page.setState({total: total});
 			} else {
-				alert("NO SUCH ELEMENT1");
+				alert("The Item is Out of Stock");
 			}
 		} else {
 			alert("NO SUCH ITEM");
 		}
 	}).catch(err => {
-		alert(err);
+		alert(err.response.data.error);
 	})
 };
 
@@ -73,7 +74,7 @@ export const checkOut = (page, data, i) => {
 			page.setState({netTotal: toTal});
 		}
 	}).catch(err => {
-		alert("Some items decreased in stock before your check out");
+		alert(err.response.data.error);
 		axios.get(`${domain}/item/${data.id}`).then(res => {
 			if (res.data.item){
 				const itemRemote = res.data.item;
@@ -102,7 +103,7 @@ export const checkOut = (page, data, i) => {
 				alert("NO SUCH ITEM");
 			}
 		}).catch(err => {
-			alert(err);
+			alert(err.response.data.error);
 		})
 	})
 };
@@ -115,7 +116,7 @@ export const addItem = (page, data) => {
 			alert("ADDITION FAILED");
 		}
 	}).catch(err => {
-		alert("Invalid Item Addition");
+		alert(err.response.data.error);
 	})
 };
 
@@ -127,7 +128,7 @@ export const removeItem = (page, itemId) => {
 			alert("REMOVE FAILED");
 		}
 	}).catch(err => {
-		alert("Invalid Item Removal");
+		alert(err.response.data.error);
 	})
 };
 
@@ -138,10 +139,10 @@ export const login = (page, data) => {
 			page.props.history.push("/admin");
 			checkSession(page);
 		} else {
-			console.log("LOGIN FAILED");
+			alert("Wrong username or password");
 		}
 	}).catch(err => {
-		console.log(err);
+		alert(err.response.data.error);
 	});
 };
 
@@ -168,7 +169,7 @@ export const editGlobal = (page, data) => {
 			alert("EDITION FAILED");
 		}
 	}).catch(err => {
-		alert("Invalid Global Edition");
+		alert(err.response.data.error);
 	})
 };
 
@@ -180,6 +181,6 @@ export const getGlobal = (page) => {
 			alert("FETCH FAILED");
 		}
 	}).catch(err => {
-		alert("Invalid Global Fetch");
+		alert(err.response.data.error);
 	})
 };
