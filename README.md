@@ -22,9 +22,8 @@ MOB Frontend:[https://github.com/csc301-fall-2020/assignment-1-4-accelsnow-altai
 
 - User can edit the quantity of each item in the cart manually in the range of [0, stock]. Item will be removed from the cart if invalid input is given.
 
-REQUIREMENT:
-
-0 <= quantity <= stock
+  REQUIREMENT:
+  0 <= quantity <= stock
 
 - User can see the net total of all items in the cart in real time (update as user changes quantity).
 
@@ -37,6 +36,7 @@ REQUIREMENT:
 - In order to login as Manager, user need this Info: {username: manager, password: Passw0rd123}. User can click the manager portal to log in as manager, and be redirected to manager portal page, where user can click the log out button to quit manager session and be redirected to checkout page. All unauthorized accesses to manager page are prohibited.
 
 - Manager can type in valid information about a new item manager comes up with and click the add button to add the new item to the inventory. If invalid values are given, the add button will be disabled. Other errors only checkable in database (e.g. duplicate key…) will be reported as an alert if occurred.
+
   REQUIREMENT:
   name: String
   price: Float &amp;&amp; 0 <= price
@@ -44,6 +44,7 @@ REQUIREMENT:
   stock: Integer &amp;&amp; 0 <= stock
 
 - Manager has all access to all items&#39; information. In addition, manager can edit one item&#39;s price, discount, and stock in-line or remove this item from the inventory. Errors will be caught and reported as an alert.
+
   REQUIREMENT:
   price: Float &amp;&amp; 0 <= price
   discount: Float &amp;&amp; 0 <= discount <= 1
