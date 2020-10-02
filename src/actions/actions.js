@@ -3,9 +3,10 @@ import {create_item} from "../components/CheckoutPage/Checkout";
 
 const axios = require('axios');
 axios.defaults.withCredentials = true;
-
+/* specify domain addr */
 const domain = "http://checkout-env.eba-icztdryu.ca-central-1.elasticbeanstalk.com/";
 
+/* GET all items */
 export const getAllItems = (page) => {
     axios.get(`${domain}/items`).then(res => {
         if (res.data.items) {
@@ -18,6 +19,7 @@ export const getAllItems = (page) => {
     })
 };
 
+/* EDIT one item's price, discount, or stock given itemID */
 export const editItem = (page, itemID, data) => {
     axios.patch(`${domain}/item/${itemID}`, data).then(res => {
         if (res.data.item) {
@@ -31,6 +33,7 @@ export const editItem = (page, itemID, data) => {
     })
 };
 
+/* GET one item and add it to checkout paage cart by 1 given itemID if stock > 0 */
 export const addToCart = (page, itemId) => {
     axios.get(`${domain}/item/${itemId}`).then(res => {
         if (res.data.item) {
@@ -64,6 +67,7 @@ export const addToCart = (page, itemId) => {
     })
 };
 
+/* POST updated item info after checkout and update checkout page total if valid else adjust cart quantity */
 export const checkOut = (page, data, i) => {
     axios.post(`${domain}/item/purchase`, data).then(res => {
         if (res.data.item) {
@@ -108,6 +112,7 @@ export const checkOut = (page, data, i) => {
     })
 };
 
+/* POST one new item given info */
 export const addItem = (page, data) => {
     axios.post(`${domain}/item`, data).then(res => {
         if (res.data.item) {
@@ -120,6 +125,7 @@ export const addItem = (page, data) => {
     })
 };
 
+/* DELETE one item given itemId */
 export const removeItem = (page, itemId) => {
     axios.delete(`${domain}/item/${itemId}`).then(res => {
         if (res.data.success) {
@@ -132,6 +138,7 @@ export const removeItem = (page, itemId) => {
     })
 };
 
+/* POST login info */
 export const login = (page, data) => {
     axios.post(`${domain}/login`, data, {withCredentials: true}).then(res => {
         if (res.data.manager) {
@@ -146,6 +153,7 @@ export const login = (page, data) => {
     });
 };
 
+/* Log out */
 export const logout = (page) => {
     axios.get(`${domain}/logout`).then(res => {
         if (res.data.success) {
@@ -155,6 +163,7 @@ export const logout = (page) => {
     })
 };
 
+/* GET current user and check session */
 export const checkSession = (props) => {
     axios.get(`${domain}/session`, {withCredentials: true}).then(res => {
         props.setState({currentUser: res.data.current_user, sessionChecked: true});
@@ -163,6 +172,7 @@ export const checkSession = (props) => {
     });
 };
 
+/* POST global tax and discount info to update them */
 export const editGlobal = (page, data) => {
     axios.patch(`${domain}/checkout/${1}`, data).then(res => {
         if (res.data.checkout) {
@@ -175,6 +185,7 @@ export const editGlobal = (page, data) => {
     })
 };
 
+/* GET global tax and discount info */
 export const getGlobal = (page) => {
     axios.get(`${domain}/checkout/${1}`).then(res => {
         if (res.data.checkout) {

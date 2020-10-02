@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import {withRouter} from "react-router-dom";
-import {login} from "../../actions/item";
+import {login} from "../../actions/actions";
 
 class Login extends Component {
     constructor(props) {
@@ -16,7 +16,8 @@ class Login extends Component {
         };
     }
 
-    onChangeEmail = (e) => {
+    /* handle login info change */
+    onChangeUsername = (e) => {
         e.preventDefault();
         this.setState({username: e.target.value});
     };
@@ -48,7 +49,7 @@ class Login extends Component {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            onChange={this.onChangeEmail}
+                            onChange={this.onChangeUsername}
                         />
                         <TextField
                             variant="outlined"

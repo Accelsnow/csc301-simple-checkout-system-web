@@ -13,8 +13,9 @@ import TableBody from "@material-ui/core/TableBody";
 import "./Manager.css";
 import {Formik} from "formik";
 import * as Yup from "yup";
-import {addItem, editGlobal, editItem, getAllItems, getGlobal, logout, removeItem} from "../../actions/item";
+import {addItem, editGlobal, editItem, getAllItems, getGlobal, logout, removeItem} from "../../actions/actions";
 
+/* Validation Schema for adding items */
 const AddSchema = Yup.object().shape({
     name: Yup.string()
         .min(2, "Too Short!")
@@ -32,6 +33,7 @@ const AddSchema = Yup.object().shape({
         .required("Required"),
 });
 
+/* Validation Schema for editing tax and discounts */
 const EditSchema = Yup.object().shape({
     discount: Yup.number()
         .min(0, "Should be in range [0,1]")
@@ -47,23 +49,26 @@ class Manager extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
-            checkout: null,
-            edit: -1,
+            items: [], /* record all items in inventory */
+            checkout: null, /* record global tax and discount */
+            edit: -1, /* indicate which item is on edit */
         };
     }
 
     componentDidMount() {
+        /* pre-load all items and global taxes and discounts */
         getAllItems(this);
         getGlobal(this);
     }
 
     onEditGlobals = (e) => {
+        /* call edit global tax or discount API*/
         editGlobal(this, e);
     };
 
     onEditItem = (e, i) => {
         if (i === this.state.edit) {
+            /* if editing correct item, parse edited info and call editItem API */
             const newPrice = document.getElementById("edit-price".concat(i.toString())).value;
             const newDiscount = document.getElementById("edit-discount".concat(i.toString())).value;
             const newStock = document.getElementById("edit-stock".concat(i.toString())).value;
@@ -74,11 +79,13 @@ class Manager extends Component {
         }
     };
     onRemoveItem = (e, i) => {
+        /* call remove item API */
         e.preventDefault();
         removeItem(this, i);
     };
 
     onAddItem = (e) => {
+        /* call add item API */
         addItem(this, e);
     };
 
