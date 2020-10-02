@@ -106,6 +106,7 @@ class Checkout extends Component {
 					>
 						Manager Portal
 					</Button>
+					<h1>Cart</h1>
 					<form className="form_checkout" noValidate onSubmit={this.onAddItem}>
 						<TextField
 							className="search_input"
@@ -204,10 +205,11 @@ class Checkout extends Component {
 							<form className="receipt">
 								<h2>Receipt</h2>
 								<h4>Net Total: {round(this.state.total)}</h4>
-								<h4>Tax Rate: {round(this.state.checkout.tax_rate)}</h4>
-								<h4>Discount: {round(this.state.checkout.discount)}</h4>
+								<h4>Tax Rate: {round(this.state.checkout.tax_rate*100)+"%"}</h4>
+								<h4>Discount: {"-"+round(this.state.checkout.discount*100)+"%"}</h4>
 								<h4>Total: {round(this.state.total * (1+this.state.checkout.tax_rate)*(1-this.state.checkout.discount))}</h4>
-								<Button onClick={this.onConfirm}> Confirm </Button>
+								<Button onClick={this.onConfirm}> <h4>Confirm</h4></Button>
+								<h5>{"made at:"+new Date().toLocaleTimeString()}</h5>
 							</form>
 						</Modal>
 					</form>

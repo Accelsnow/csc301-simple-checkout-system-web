@@ -67,17 +67,8 @@ class Admin extends Component {
 			const newPrice = document.getElementById("edit-price".concat(i.toString())).value;
 			const newDiscount = document.getElementById("edit-discount".concat(i.toString())).value;
 			const newStock = document.getElementById("edit-stock".concat(i.toString())).value;
-			if (!newPrice || newPrice < 0){
-				alert("Price should be non-negative");
-			} else if (!newDiscount || newDiscount > 1||  newDiscount  < 0){
-				alert("Discount should be in range[0,1]");
-			} else if (!newStock || newStock < 0){
-				alert("Stock should ne non-negative");
-			} else {
-				let data = {price: newPrice, discount: newDiscount, stock: newStock};
-				editItem(this, i, data);
-				this.setState({edit: -1});
-			}
+			let data = {price: newPrice, discount: newDiscount, stock: newStock};
+			editItem(this, i, data);
 		} else {
 			this.setState({edit: i});
 		}
@@ -92,7 +83,6 @@ class Admin extends Component {
 	};
 
 	render() {
-		const { history } = this.props;
 		if (this.state.checkout) {
 			return (
 				<div className="container_admin">
@@ -105,6 +95,8 @@ class Admin extends Component {
 					>
 						Sign Out
 					</Button>
+					<h1>Inventory</h1>
+					<h3>Add Item</h3>
 					<Formik
 						initialValues={{ name: "", price: 0, discount: 0, stock: 0 }}
 						validationSchema={AddSchema}
@@ -118,8 +110,9 @@ class Admin extends Component {
 							  handleBlur,
 							  handleSubmit,
 						  }) => (
-							<form className="form_admin">
+							<form className = "add_form">
 								<TextField
+									className = "add_attr"
 									label={"name"}
 									id="name"
 									variant="outlined"
@@ -130,8 +123,10 @@ class Admin extends Component {
 									onChange={handleChange}
 									error={!!(errors.name && touched.name)}
 									helperText={touched.name && errors.name}
+									style={{marginRight: "1%"}}
 								/>
 								<TextField
+									className = "add_attr"
 									label={"price"}
 									id="price"
 									variant="outlined"
@@ -142,8 +137,10 @@ class Admin extends Component {
 									onChange={handleChange}
 									error={!!(errors.price && touched.price)}
 									helperText={touched.price&& errors.price}
+									style={{marginRight: "1%"}}
 								/>
 								<TextField
+									className = "add_attr"
 									label={"discount"}
 									id="discount"
 									variant="outlined"
@@ -154,8 +151,10 @@ class Admin extends Component {
 									onChange={handleChange}
 									error={!!(errors.discount && touched.discount)}
 									helperText={touched.discount&& errors.discount}
+									style={{marginRight: "1%"}}
 								/>
 								<TextField
+									className = "add_attr"
 									label={"stock"}
 									id="stock"
 									variant="outlined"
@@ -166,16 +165,18 @@ class Admin extends Component {
 									onChange={handleChange}
 									error={!!(errors.stock && touched.stock)}
 									helperText={touched.stock&& errors.stock}
+									style={{marginRight: "1%"}}
 								/>
 								<Button
 									variant="contained"
 									onClick={handleSubmit}
 								>
-									Add Item
+									Add
 								</Button>
 							</form>
 						)}
 					</Formik>
+					<h3>Edit Item</h3>
 					<TableContainer component={Paper} className="table_admin">
 						<Table style={{minWidth: 650}} aria-label="simple table">
 							<TableHead>
@@ -186,7 +187,7 @@ class Admin extends Component {
 									<TableCell align="center">Discount&nbsp;(%)</TableCell>
 									<TableCell align="center">Stock</TableCell>
 									<TableCell align="center">Edit</TableCell>
-									<TableCell align="center">remove</TableCell>
+									<TableCell align="center">Remove</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -203,11 +204,6 @@ class Admin extends Component {
 												variant="outlined"
 												align="center"
 												type="number"
-												InputProps={{
-													inputProps: {
-														min: 0
-													}
-												}}
 												defaultValue={round(item.price)}
 												disabled={this.state.edit !== item.id}
 												id={"edit-price".concat(item.id.toString())}
@@ -218,12 +214,7 @@ class Admin extends Component {
 												variant="outlined"
 												align="center"
 												type="number"
-												InputProps={{
-													inputProps: {
-														max: 1, min: 0
-													}
-												}}
-												defaultValue={item.discount}
+												defaultValue={round(item.discount)}
 												disabled={this.state.edit !== item.id}
 												id={"edit-discount".concat(item.id.toString())}
 											>{"-"+item.discount*100+"%"}</TextField>
@@ -233,11 +224,6 @@ class Admin extends Component {
 												variant="outlined"
 												align="center"
 												type="number"
-												InputProps={{
-													inputProps: {
-														min: 0
-													}
-												}}
 												defaultValue={item.stock}
 												disabled={this.state.edit !== item.id}
 												id={"edit-stock".concat(item.id.toString())}
@@ -262,6 +248,7 @@ class Admin extends Component {
 							</TableBody>
 						</Table>
 					</TableContainer>
+					<h3>Edit Tax & Discount</h3>
 					<Formik
 						initialValues={{ tax_rate: this.state.checkout.tax_rate, discount: this.state.checkout.discount}}
 						validationSchema={EditSchema}
@@ -287,6 +274,7 @@ class Admin extends Component {
 									onChange={handleChange}
 									error={!!(errors.tax_rate && touched.tax_rate)}
 									helperText={touched.tax_rate && errors.tax_rate}
+									style={{marginRight: "5%"}}
 								/>
 								<TextField
 									label={"discount"}
@@ -299,6 +287,7 @@ class Admin extends Component {
 									onChange={handleChange}
 									error={!!(errors.discount && touched.discount)}
 									helperText={touched.discount&& errors.discount}
+									style={{marginRight: "5%"}}
 								/>
 								<Button
 									variant="contained"
