@@ -4,7 +4,7 @@ import Checkout from "./components/CheckoutPage/Checkout";
 import Manager from "./components/ManagerPage/Manager";
 import Login from "./components/LoginPage/Login";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {checkSession} from "./actions/item";
+import {checkSession} from "./actions/actions";
 
 class App extends React.Component {
     constructor(props) {
@@ -23,6 +23,7 @@ class App extends React.Component {
         const currentUser = this.state.currentUser;
 
         return (
+            /* Router component*/
             <BrowserRouter>
                 <React.Fragment>
                     {!currentUser ? <Switch>
@@ -33,6 +34,7 @@ class App extends React.Component {
                                 <Login history={history} app={this}/>
                             )}/>
                             <Route exact path="/manager" render={({history}) => {
+                                /* Invalid Access to Manager */
                                 alert("You are not logged in as manager! Redirecting back to main page");
                                 history.push("/");
                                 return <Checkout history={history} app={this}/>;

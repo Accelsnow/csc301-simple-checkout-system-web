@@ -12,9 +12,9 @@ import Button from "@material-ui/core/Button";
 import Modal from '@material-ui/core/Modal';
 import "./Checkout.css";
 import {withRouter} from "react-router-dom";
-import {addToCart, checkOut, getAllItems, getGlobal} from "../../actions/item";
+import {addToCart, checkOut, getAllItems, getGlobal} from "../../actions/actions";
 
-
+/* helper function creating item instance in cart*/
 export function create_item(item) {
     return ({
         id: item.id,
@@ -31,20 +31,22 @@ class Checkout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
-            cart: [],
-            checkout: null,
-            netTotal: 0,
-            total: 0,
-            modalOpen: false
+            items: [], /* record all items in inventory */
+            cart: [], /* record all items in cart */
+            checkout: null, /* record global tax and discount */
+            netTotal: 0, /* record net total */
+            total: 0, /* record total*/
+            modalOpen: false /* indicator for receipt modal */
         };
     }
 
+    /* preload all items and global tax and discount */
     componentDidMount() {
         getAllItems(this);
         getGlobal(this);
     }
 
+    /* if item quantity changes to 0 on Blur, delete from cart */
     onBlurQuantity = (e, item) => {
         const cartCopy = this.state.cart;
         const itemCopy = cartCopy.find(i => i.id === item.id);
@@ -53,6 +55,8 @@ class Checkout extends Component {
             this.setState({cart: cartCopy});
         }
     };
+
+    /* if item's quantity is invalid delete from cart */
     onChangeQuantity = (e, item) => {
         const cartCopy = this.state.cart;
         const itemCopy = cartCopy.find(i => i.id === item.id);
@@ -69,20 +73,28 @@ class Checkout extends Component {
             this.setState({cart: cartCopy, total: 0});
         }
     };
+
+    /* handle change of search input for item */
     onChangeSearch = (e) => {
         e.preventDefault();
         this.setState({search: e.target.value});
     };
+
+    /* call addToCart API */
     onAddItem = (e) => {
         e.preventDefault();
         getAllItems(this);
         addToCart(this, this.state.search);
     };
+
+    /* call checkout API to open checkout modal*/
     onCheckout = (e) => {
         e.preventDefault();
         getGlobal(this);
         this.setState({modalOpen: true});
     };
+
+    /* call confirm API to actually checkout all items in cart and quit session*/
     onConfirm = (e) => {
         e.preventDefault();
         let i;
@@ -98,6 +110,7 @@ class Checkout extends Component {
         });
     };
 
+    /* handle receipt modal close */
     onModalClose = (e) => {
         e.preventDefault();
         this.setState({modalOpen: false});
