@@ -4,7 +4,7 @@ import {create_item} from "../components/CheckoutPage/Checkout";
 const axios = require('axios');
 axios.defaults.withCredentials = true;
 
-const domain = "http://checkout-env.eba-icztdryu.ca-central-1.elasticbeanstalk.com";
+const domain = "http://checkout-env.eba-icztdryu.ca-central-1.elasticbeanstalk.com/";
 
 export const getAllItems = (page) => {
 	axios.get(`${domain}/items`).then(res => {
