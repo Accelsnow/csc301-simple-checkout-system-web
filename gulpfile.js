@@ -15,7 +15,7 @@ const paths = {
 function clean()  {
   log('removing the old files in the directory')
   return del('./prod-build/**', {force:true});
-}
+};
 
 function createProdBuildFolder() {
 
@@ -27,7 +27,7 @@ function createProdBuildFolder() {
   }
 
   return Promise.resolve('the value is ignored');
-}
+};
 
 function buildReactCodeTask(cb) {
   log('building React code into the directory')
@@ -36,27 +36,27 @@ function buildReactCodeTask(cb) {
     log(stderr);
     cb(err);
   })
-}
+};
 
 function copyReactCodeTask() {
   log('copying React code into the directory')
   return src(`${paths.react_src}`)
         .pipe(dest(`${paths.react_dist}`));
-}
+};
 
 
 function copyProcFileTask() {
   log('Copy Procfile into the directory')
   return src(['Procfile'])
       .pipe(dest(`${paths.prod_build}`))
-}
+};
 
 function zippingTask() {
   log('zipping the code ')
   return src(`${paths.prod_build}/**`)
       .pipe(zip(`${paths.zipped_file_name}`))
       .pipe(dest(`${paths.prod_build}`))
-}
+};
 
 exports.default = series(
   clean,
