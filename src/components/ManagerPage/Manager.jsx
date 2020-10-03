@@ -24,7 +24,7 @@ const AddSchema = Yup.object().shape({
     price: Yup.number()
         .positive("Should be non-negative")
         .required("Required"),
-    discount: Yup.number()
+    idiscount: Yup.number()
         .min(0, "Should be in range [0,1]")
         .max(1, "Should be in range [0,1]")
         .required("Required"),
@@ -86,7 +86,7 @@ class Manager extends Component {
 
     onAddItem = (e) => {
         /* call add item API */
-        addItem(this, e);
+        addItem(this, {name: e.name, price: e.price, discount: e.idiscount, stock: e.stock});
     };
 
     render() {
@@ -107,7 +107,7 @@ class Manager extends Component {
                     <h1>Inventory</h1>
                     <h3>Add Item</h3>
                     <Formik
-                        initialValues={{name: "", price: 0, discount: 0, stock: 0}}
+                        initialValues={{name: "", price: 0, idiscount: 0, stock: 0}}
                         validationSchema={AddSchema}
                         onSubmit={(e) => {
                             this.onAddItem(e)
@@ -153,15 +153,15 @@ class Manager extends Component {
                                 <TextField
                                     className="add_attr"
                                     label={"discount"}
-                                    id="discount"
+                                    id="idiscount"
                                     variant="outlined"
                                     autoComplete="off"
                                     type="number"
-                                    value={values.discount}
+                                    value={values.idiscount}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    error={!!(errors.discount && touched.discount)}
-                                    helperText={touched.discount && errors.discount}
+                                    error={!!(errors.idiscount && touched.idiscount)}
+                                    helperText={touched.idiscount && errors.idiscount}
                                     style={{marginRight: "1%"}}
                                 />
                                 <TextField
@@ -297,7 +297,7 @@ class Manager extends Component {
                                 />
                                 <TextField
                                     label={"discount"}
-                                    id="checkout-discount"
+                                    id="discount"
                                     variant="outlined"
                                     autoComplete="off"
                                     value={values.discount}
