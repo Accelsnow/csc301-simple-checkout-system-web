@@ -2,11 +2,11 @@
 
 Links for our APP&#39;s repos:
 
-Backend: [https://github.com/csc301-fall-2020/assignment-1-4-accelsnow-altair59-backend](https://github.com/csc301-fall-2020/assignment-1-4-accelsnow-altair59-backend)
+Backend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-backend](https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-backend)
 
-WEB Frontend: [https://github.com/csc301-fall-2020/assignment-1-4-accelsnow-altair59-web](https://github.com/csc301-fall-2020/assignment-1-4-accelsnow-altair59-web)
+WEB Frontend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-web](https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-web)
 
-MOB Frontend:[https://github.com/csc301-fall-2020/assignment-1-4-accelsnow-altair59-mobile](https://github.com/csc301-fall-2020/assignment-1-4-accelsnow-altair59-mobile)
+MOB Frontend:[https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-mobile](https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-mobile)
 
 **Design Overview**
 
