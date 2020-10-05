@@ -55,8 +55,6 @@ WEB Frontend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-we
 
 **Frontend Component Design**
 
-============================BOTH WEB &amp; MOBILE APP==========================
-
 - Checkout page:
   - An item search bar to add items into the cart
   - A table of items in the cart with proper information
@@ -64,8 +62,6 @@ WEB Frontend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-we
   - A checkout button
   - A modal displaying receipt information
   - A log in button to enter manager session
-
-============================BELOW ARE WEB APP ONLY=========================
 
 - Manager page:
   - An form to add a new item
@@ -75,49 +71,41 @@ WEB Frontend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-we
 
 **Backend Model Design**
 
-- The database models we implement:
+  - The database models we implement:
 
-Manager: {
+  Manager: {
 
-username: String, // username
+  username: String, // username
 
-password\_hash: String // passoword
+  password\_hash: String // passoword
 
-}
+  }
 
-Item: {
+  Item: {
 
-id: Integer, // unique item id
+  id: Integer, // unique item id
 
-name: String, // item name
+  name: String, // item name
 
-discount: Float, // item discount rate should be in range [0,1]
+  discount: Float, // item discount rate should be in range [0,1]
 
-price: Float, // item price should be in range [0,
+  price: Float, // item price should be in range [0,
 
-stock: Integer // iten stock should be in range [0,
+  stock: Integer // iten stock should be in range [0,
 
-}
+  }
 
-Checkout: {
+  Checkout: {
 
-id: Integer, // unique checkout id
+  id: Integer, // unique checkout id
 
-tax\_rate: Float, // global tax rate should be in range [0,
+  tax\_rate: Float, // global tax rate should be in range [0,
 
-discount: Float // global discount should be in range [0,1]
+  discount: Float // global discount should be in range [0,1]
 
-}
+  }
 
 **Testing Instruction**
-
-- Testing for backend logic
-
-All tests are written in Pytest, the testing directory is &quot;assignment-1-4-accelsnow-altair59-backend/tests/&quot;, including:
-
-1. &quot;conftest.py&quot; for setting up testing environment.
-2. &quot;test\_db\_integrity.py&quot; for checking database integrity.
-3. &quot;test\_api\_correctness.py&quot; for checking api functionalities.
 
 - Testing for App functionality
 
