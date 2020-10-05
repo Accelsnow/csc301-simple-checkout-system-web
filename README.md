@@ -1,5 +1,5 @@
 CSC301 - A1 - CHECKOUT APP - MADE BY Youhai Li & Junan Zhao
-# Deployed Wen App
+# Deployed Web App
 Checkout Web App: [http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/](http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/)
 # Instructions
 
