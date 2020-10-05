@@ -9,8 +9,6 @@ Backend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-backend
 
 WEB Frontend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-web](https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-web)
 
-MOB Frontend:[https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-mobile](https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-mobile)
-
 **Design Overview**
 
 - We decide to implement a checkout system backed up by an item inventory supported by MySQL database. Any user from WEB end or MOBILE end of our APP can search to add item, modify cart, and see the calculated total of the items (involving individual item discount, global cart discount, and global tax rate as parameter), and each session ends after the user confirms the receipt. However, considering that manager operations on the inventory (editing certain fields of item, removing item, adding item under restriction, and editing global taxes &amp; discounts) are sophisticated to be performed and table with massive information are not visually clean and tidy on MOBILE end, we decide to implement access (of course with authorization) to manager portal only on WEB end.
