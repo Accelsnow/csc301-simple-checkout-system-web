@@ -68,41 +68,33 @@ export const addToCart = (page, itemId) => {
 };
 
 /* POST updated item info after checkout and update checkout page total if valid else adjust cart quantity */
-export const checkOut = (page, data, i) => {
-    axios.post(`${domain}/item/purchase`, data).then(res => {
+export const checkOut = (page, cart, i) => {
+    axios.post(`${domain}/item/purchase`, {id: cart[i].id, amount: cart[i].quantity}).then(res => {
         if (res.data.item) {
-            getGlobal(page);
-            const validItem = res.data.item;
-            let toTal = page.state.netTotal;
-            toTal += validItem.price * (1 - validItem.discount) * data.amount * (1 + page.state.checkout.tax_rate) * (1 - page.state.checkout.discount);
-            page.setState({netTotal: toTal});
+            let total= page.state.total;
+            total -= cart[i].total;
+            page.setState({total: total});
         }
     }).catch(err => {
-        alert(err.response.data.error);
-        axios.get(`${domain}/item/${data.id}`).then(res => {
+        alert(`${cart[i].name} not bought due to change in stock, it will remain in your cart with latest updated stock information`);
+        axios.get(`${domain}/item/${cart[i].id}`).then(res => {
             if (res.data.item) {
                 const itemRemote = res.data.item;
                 let total = page.state.total;
-                if (itemRemote) {
-                    const cartCopy = page.state.cart;
-                    if (itemRemote.stock === 0) {
-                        total -= cartCopy[i].total;
-                        page.setState({total: total});
-                        cartCopy.splice(i, 1);
-                    } else {
-                        cartCopy[i].price = itemRemote.price;
-                        cartCopy[i].discount = itemRemote.discount;
-                        cartCopy[i].stock = itemRemote.stock;
-                        if (cartCopy[i].quantity > itemRemote.stock) {
-                            cartCopy[i].quantity = itemRemote.stock;
-                        }
-                        total -= cartCopy[i].total;
-                        cartCopy[i].total = Number(round(cartCopy[i].price * (1 - cartCopy[i].discount) * cartCopy[i].quantity));
-                        total += cartCopy[i].total;
-                        page.setState({total: total});
-                    }
-                    page.setState({cart: cartCopy});
+                cart[i].price = itemRemote.price;
+                cart[i].discount = itemRemote.discount;
+                cart[i].stock = itemRemote.stock;
+                if (cart[i].quantity > itemRemote.stock) {
+                    cart[i].quantity = itemRemote.stock;
                 }
+                total -= cart[i].total;
+                cart[i].total = Number(round(cart[i].price * (1 - cart[i].discount) * cart[i].quantity));
+                total += cart[i].total;
+                let cartCopy = page.state.cart;
+                if (cart[i].stock !== 0) {
+                    cartCopy.push(cart[i]);
+                }
+                page.setState({total: total, cart: cartCopy});
             } else {
                 alert("NO SUCH ITEM");
             }

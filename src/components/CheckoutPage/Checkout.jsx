@@ -97,16 +97,16 @@ class Checkout extends Component {
     /* call confirm API to actually checkout all items in cart and quit session*/
     onConfirm = (e) => {
         e.preventDefault();
-        let i;
-        for (i = 0; i < this.state.cart.length; i++) {
-            let data = {id: this.state.cart[i].id, amount: this.state.cart[i].quantity};
-            checkOut(this, data, i);
-        }
+        let cartCopy = this.state.cart;
+        this.setState({cart: []}, () => {
+            let i;
+            for (i = 0; i < cartCopy.length; i++) {
+                checkOut(this, cartCopy, i);
+            }
+        });
         this.setState({
-            modalOpen: false, items: [],
-            cart: [],
+            modalOpen: false,
             netTotal: 0,
-            total: 0,
         });
     };
 
