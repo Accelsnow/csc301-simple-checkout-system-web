@@ -1,7 +1,16 @@
 CSC301 - A1 - CHECKOUT APP - MADE BY Youhai Li & Junan Zhao
 # Deployed Web App
 Checkout Web App: [http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/](http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/)
- -------    chrome ---------
+
+Since our website does not have HTTPS w/ SSL certificate, the session cookies of our website can not be sent securely. Furthermore, since we are using an API server on a different domain to manage our sessions, we need to set our cookie's SameSite attribute to None to allow CORS requests. Since chrome has recently enforced cookies with SameSite attribute None to must be secure, and our project does not meet that requirement, if you need to test the login function(manager portal) part of the website, it is mandatory to set some chrome flags to disable this security measure temporarily. Follow the following steps:
+ - 1. In latest version chrome, type "chrome://flags" in address bar and press enter.
+ - 2. In search bar, type "SameSite". There should be three options "SameSite by default cookies", "Enable removing SameSite=None cookies" and "Cookies without SameSite must be secure".
+ - 3. Set those options to Disabled and restart chrome.
+
+If you skip these steps, the manager portal will be read-only, since the API server detects no session cookie and will reject any attempt to modify backend data (but since initial login request was valid, manager would be able to view the data). Normal user functionalities does not require session, and thus are not affected by this problem.
+
+On firefox, there will be a warning complaining about the unsecure cookie, but the functionalites are not yet affected since firefox is not enforcing this policy by default (but may be in near futures).
+
 # Instructions
 
 Links for our APP&#39;s repos:
