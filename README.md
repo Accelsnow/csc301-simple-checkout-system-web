@@ -38,7 +38,7 @@ WEB Frontend: [https://github.com/Accelsnow/assignment-1-4-accelsnow-altair59-we
 
 - User can click the checkout button to see the receipt which includes more detailed information (cart discount, cart tax rate, total, and time of checkout). If the user clicks the confirm button, a purchase is completed and the cart will be cleaned and inventory will be updated correctly (thus entering next purchase), else user is sent back to the cart (the purchase remains pending).
 
-- If someone else also bought this item before the user checks out, the quantity of that item in the cart will be adjusted if needed (e.g. if A wants to buy 2 cokes but the stock of coke is changed from 2 to 1 since B buys 1 coke before A checks out, then when checks out A will be notified of this change and coke quantity in A&#39;s cart will be updated to 1 accordingly).
+- If someone else also bought this item before the user checks out, the quantity of that item in the cart will be adjusted if needed (e.g. if A wants to buy 2 cokes but the stock of coke is changed from 2 to 1 since B buys 1 coke before A checks out, then when checks out A will be notified of this change and coke quantity in A&#39;s cart will be updated to 1 accordingly). All available items will be purchased, as items like A will not be purchased and will be pushed back to cart with information updated.
 
 - In order to login as Manager, user need this Info: {username: manager, password: Passw0rd123}. User can click the manager portal to log in as manager, and be redirected to manager portal page, where user can click the log out button to quit manager session and be redirected to checkout page. All unauthorized accesses to manager page are prohibited.
 
