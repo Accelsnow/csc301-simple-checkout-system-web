@@ -1,6 +1,6 @@
 CSC301 - A1 - CHECKOUT APP - MADE BY Youhai Li & Junan Zhao
 # Deployed Web App
-Checkout Web App: [http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/](http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/)
+Checkout Web App: [http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/](http://checkoutfrontend-env.eba-ssaxsy3m.ca-central-1.elasticbeanstalk.com/) (DEPRECATED - NO LONGER DEPLOYED/AVAILABLE)
 
 We are using Github Actions as our CI/CD tool. The workflow triggers when there it detects a push in the master branch. Upon a push(merged PR), workflow will execute, building the project and deploying it onto AWS elasticbeanstalk service located at the above link. A success deployment will be indicated by a green check mark beside the commits in the master branch. The "Actions" tab in the repository will also show all workflows executed since the creation of the repository. Since we migrated our repository from the CSC301 Classroom repo to this repository, all the previous workflow logs are not visible in this repository.
 
